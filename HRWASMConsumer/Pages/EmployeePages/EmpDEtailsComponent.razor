@@ -1,0 +1,31 @@
+﻿@page "/Emp/DEtails/{id:int}"
+<h3>EmpDEtailsComponent</h3>
+@if (EmpObj != null)
+{
+    <h3>@EmpObj.Name</h3>
+    <h3>@EmpObj.Address</h3>
+    <h3>@EmpObj.Salary</h3>
+    <h3>@EmpObj.DeptID</h3>
+    <a href="/Emps">Back To List</a>
+    <a href="/Emp/Edit/@EmpObj.Id">Edit</a>
+}
+else
+{
+    <h3>Invalid Id Or Wait..</h3>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public Employee EmpObj { get; set; }
+
+    [Inject]
+    public IServices<Employee> EmpService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        EmpObj= await EmpService.GetByID(Id);
+        base.OnInitializedAsync();
+    }
+}

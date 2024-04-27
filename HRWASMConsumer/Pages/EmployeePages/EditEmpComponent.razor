@@ -1,0 +1,54 @@
+﻿@page "/Emp/Edit/{id:int}"
+<PageTitle>Edit Employee</PageTitle>
+<h3>EditEmpComponent</h3>
+@if (EmpObj != null)
+{
+    <EditForm Model="EmpObj" OnValidSubmit="Save">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+        <div>
+            <label>Name</label>
+            <InputText @bind-Value="EmpObj.Name" class="form form-control"></InputText>
+            <ValidationMessage For="()=>EmpObj.Name"></ValidationMessage>
+        </div>
+        <div>
+            <label>Address</label>
+            <InputText @bind-Value="EmpObj.Address" class="form form-control"></InputText>
+            <ValidationMessage For="()=>EmpObj.Address"></ValidationMessage>
+        </div>
+        <div>
+            <label>Salary</label>
+            <InputNumber @bind-Value="EmpObj.Salary" class="form form-control"></InputNumber>
+            <ValidationMessage For="()=>EmpObj.Salary"></ValidationMessage>
+        </div>
+        <div>
+            <label>DeptID</label>
+            <InputNumber @bind-Value="EmpObj.DeptID" class="form form-control"></InputNumber>
+            <ValidationMessage For="()=>EmpObj.DeptID"></ValidationMessage>
+        </div>
+        <input type="submit" value="Update" />
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public Employee EmpObj { get; set; }
+
+    [Inject]
+    public IServices<Employee> EmpService { get; set; }
+
+    [Inject]
+    public NavigationManager navManager { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        EmpObj= await EmpService.GetByID(Id);
+        base.OnInitializedAsync();
+    }
+    async void Save()
+    {
+        await EmpService.Update(Id, EmpObj);
+        navManager.NavigateTo("/Emps");
+    }
+}

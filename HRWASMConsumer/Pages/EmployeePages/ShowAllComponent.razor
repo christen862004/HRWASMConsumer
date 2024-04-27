@@ -1,0 +1,31 @@
+﻿@page "/Emps"
+<PageTitle>All Employees</PageTitle>
+<h3>ShowAllComponent</h3>
+@if (EmpList != null)
+{
+    <table class="table table-bordered">
+        @foreach (var item in EmpList)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Salary</td>
+                <td><a href="/Emp/Details/@item.Id">DEatils</a></td>
+                <td><a href="/Emp/Edit/@item.Id">Edit</a></td>
+            </tr>
+        }
+    </table>
+}
+
+@code {
+    [Inject]
+    public IServices<Employee> EmployeeService { get; set; }
+
+    public List<Employee> EmpList { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        EmpList= await EmployeeService.GetAll();
+        base.OnInitializedAsync();
+    }
+}
