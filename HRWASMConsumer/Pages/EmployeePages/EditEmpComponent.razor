@@ -23,7 +23,14 @@
         </div>
         <div>
             <label>DeptID</label>
-            <InputNumber @bind-Value="EmpObj.DeptID" class="form form-control"></InputNumber>
+          @*   <InputNumber @bind-Value="EmpObj.DeptID" class="form form-control"></InputNumber> *@
+            <InputSelect @bind-Value="EmpObj.DeptID" class="form form-control">
+                @foreach (var item in DeptList)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+
+            </InputSelect>
             <ValidationMessage For="()=>EmpObj.DeptID"></ValidationMessage>
         </div>
         <input type="submit" value="Update" />
@@ -40,10 +47,16 @@
     public IServices<Employee> EmpService { get; set; }
 
     [Inject]
+    public IServices<Department> DEptService { get; set; }
+
+    [Inject]
     public NavigationManager navManager { get; set; }
+
+    public List<Department> DeptList { get; set; }
     protected override async Task OnInitializedAsync()
     {
         EmpObj= await EmpService.GetByID(Id);
+        DeptList = await DEptService.GetAll();
         base.OnInitializedAsync();
     }
     async void Save()
